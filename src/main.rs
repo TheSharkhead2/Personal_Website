@@ -30,7 +30,7 @@ fn command_enter_line() -> Html {
     html!(
         <div class="command-single-line">
             <p class={style_main}>
-                <span class={style1}>{"guest"}</span>
+                <span class={style1}>{"guest"}</span> // possibly temp, with user login this would change
                 {"@"}
                 <span class={style2}>{"theorode.com"}</span>
                 {":"}
