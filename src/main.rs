@@ -16,7 +16,7 @@ fn command_enter_line() -> Html {
         Callback::from(move |_| {
             if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
                 let value = input.value();
-                // do something with value
+                // do something with value here
                 current_value = value;
             }
         })
