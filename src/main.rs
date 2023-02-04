@@ -1,26 +1,34 @@
 use stylist::css;
-use stylist::yew::{Global, use_style};
-use yew::prelude::*;
+use stylist::yew::{use_style, Global};
 use web_sys::HtmlInputElement;
+use yew::prelude::*;
+
+#[derive(Properties, PartialEq)]
+pub struct CommandEnterLineProps {
+    pub on_command_entry: Callback<web_sys::Event>,
+}
 
 /// Function component for text extry line where user puts in commands
 #[function_component(CommandEnterLine)]
-fn command_enter_line() -> Html {
+fn command_enter_line(props: &CommandEnterLineProps) -> Html {
     let input_node_ref = use_node_ref();
 
-    let current_value: String = "".to_string();
+    let input_value_handle = use_state(String::default);
+    let input_value = (*input_value_handle).clone();
 
-    let onchange = {
+    let oninput = {
         let input_node_ref = input_node_ref.clone();
 
         Callback::from(move |_| {
-            if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
-                let value = input.value();
-                // do something with value
-                current_value = value;
+            let input = input_node_ref.cast::<HtmlInputElement>();
+
+            if let Some(input) = input {
+                input_value_handle.set(input.value());
             }
         })
     };
+
+    let onchange = props.on_command_entry.reform(move |e| e);
 
     let style_main = use_style!("color: var(--text-color-fifth);");
     let style1 = use_style!("color: var(--text-color-third);");
@@ -34,22 +42,40 @@ fn command_enter_line() -> Html {
                 {"@"}
                 <span class={style2}>{"theorode.com"}</span>
                 {":"}
-                <span class={style3}>{"~"}</span> // temp, change to dir later 
+                <span class={style3}>{"~"}</span> // temp, change to dir later
                 {"$"}
             </p>
             <label for="command-input">
                 <input ref={input_node_ref}
-                    {onchange}
+                    oninput={oninput}
+                    onchange={onchange}
                     id="command-input"
                     type="text"
+                    value={input_value.clone()}
                 />
             </label>
+            <p> {input_value.clone()} </p>
         </div>
     )
 }
 
 #[function_component(App)]
 fn app() -> Html {
+    let last_command_handle = use_state(String::default);
+    let last_command = (*last_command_handle).clone();
+
+    let on_command_entry: Callback<web_sys::Event> = {
+        let last_command_handle = last_command_handle.clone();
+
+        Callback::from(move |command: Event| {
+            let input = command.target_dyn_into::<HtmlInputElement>();
+
+            if let Some(input) = input {
+                last_command_handle.set(input.value());
+            }
+        })
+    };
+
     html! {
         <>
             <Global css={css!("
@@ -93,7 +119,8 @@ fn app() -> Html {
         ")}/>
             <div class="main-screen">
                 <h1>{ "Hello World!" }</h1>
-                <CommandEnterLine/>
+                <CommandEnterLine {on_command_entry}/>
+                <p> {last_command.clone()}</p>
             </div>
         </>
     }
