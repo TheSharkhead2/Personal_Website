@@ -51,7 +51,6 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                     onchange={onchange}
                     id="command-input"
                     type="text"
-                    value={input_value.clone()}
                 />
             </label>
             <p> {input_value.clone()} </p>
@@ -72,6 +71,8 @@ fn app() -> Html {
 
             if let Some(input) = input {
                 last_command_handle.set(input.value());
+
+                input.set_value("");
             }
         })
     };
