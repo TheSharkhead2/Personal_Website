@@ -35,6 +35,13 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
     let style2 = use_style!("color: var(--text-color-secondary);");
     let style3 = use_style!("color: var(--text-color-quad);");
 
+    let input_node_ref_clone = input_node_ref.clone();
+    use_effect(move || {
+        if let Some(input) = input_node_ref_clone.cast::<HtmlInputElement>() {
+            input.focus();
+        }
+    });
+
     html!(
         <div class="command-single-line">
             <p class={style_main}>
@@ -51,6 +58,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                     onchange={onchange}
                     id="command-input"
                     type="text"
+                    class="command-input"
                 />
             </label>
             <p> {input_value.clone()} </p>
@@ -61,7 +69,9 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     let last_command_handle = use_state(String::default);
+    let command_history_handle = use_mut_ref(Vec::new); // store history of commands
     let last_command = (*last_command_handle).clone();
+    let command_history = (*command_history_handle).clone();
 
     let on_command_entry: Callback<web_sys::Event> = {
         let last_command_handle = last_command_handle.clone();
@@ -71,6 +81,8 @@ fn app() -> Html {
 
             if let Some(input) = input {
                 last_command_handle.set(input.value());
+
+                (*command_history_handle.borrow_mut()).push(input.value());
 
                 input.set_value("");
             }
@@ -86,6 +98,7 @@ fn app() -> Html {
                 --text-color-third: rgb(78, 55, 135);
                 --text-color-quad: rgb(43, 122, 99);
                 --text-color-fifth: rgb(89, 98, 107);
+                --background-color: rgb(36,37,38);
             }
 
             body {
@@ -100,7 +113,7 @@ fn app() -> Html {
             }
 
             html {
-                background-color: rgb(36, 37, 38);
+                background-color: var(--background-color);
                 height: 100vh;
                 display: flex;
                 alight-items: stretch;
@@ -117,11 +130,20 @@ fn app() -> Html {
 
             }
 
+            input.command-input {
+                background-color: var(--background-color);
+                border: none;
+                color: var(--text-color-main);
+                outline: none;
+                font-size: 1rem;
+                font-family: CascadiaCode, monospace;
+            }
+
         ")}/>
             <div class="main-screen">
                 <h1>{ "Hello World!" }</h1>
                 <CommandEnterLine {on_command_entry}/>
-                <p> {last_command.clone()}</p>
+                <p> {command_history.borrow().clone()}</p>
             </div>
         </>
     }
