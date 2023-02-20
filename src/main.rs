@@ -1,5 +1,5 @@
-use stylist::css;
 use stylist::yew::{use_style, Global};
+use stylist::{css, style};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -12,6 +12,7 @@ pub struct CommandEnterLineProps {
     pub on_input: Callback<web_sys::InputEvent>,
     pub node_ref: NodeRef,
     pub on_key_enter: Callback<KeyboardEvent>,
+    pub input_style: String,
 }
 
 /// Function component for text extry line where user puts in commands
@@ -54,7 +55,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                         onkeyup={onkeyenter}
                         id="command-input"
                         type="text"
-                        class="command-input"
+                        class={&props.input_style.clone()}
                         maxlength="100"
                     />
                 </label>
@@ -96,6 +97,13 @@ fn app() -> Html {
                 }
             }
         })
+    };
+
+    // text coloring if the command is invalid
+    let input_text_style = if valid_command(&last_command) || last_command == String::new() {
+        String::from("command-input")
+    } else {
+        String::from("command-input-incorrect")
     };
 
     html! {
@@ -162,6 +170,15 @@ fn app() -> Html {
                 font-family: CascadiaCode, monospace;
             }
 
+            input.command-input-incorrect {
+                background-color: var(--background-color);
+                border: none;
+                color: var(--text-color-incorrect);
+                outline: none;
+                font-size: 1rem;
+                font-family: CascadiaCode, monospace;
+            }
+
         ")}/>
             <div class="main-screen">
                 <h1>{ "Hello World!" }</h1>
@@ -169,6 +186,7 @@ fn app() -> Html {
                     on_input={oncommandinput}
                     node_ref = {command_node_ref}
                     on_key_enter = {onkeyenter}
+                    input_style = {input_text_style}
                 />
                 <p> {command_history.borrow().clone()}</p>
             </div>
