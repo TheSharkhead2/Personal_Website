@@ -3,9 +3,11 @@ use stylist::{css, style};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
+mod basic_components;
 mod command_parsing;
 
-use command_parsing::valid_command;
+use basic_components::UsernameText;
+use command_parsing::{valid_command, PreviousCommands};
 
 #[derive(Properties, PartialEq)]
 pub struct CommandEnterLineProps {
@@ -26,11 +28,6 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
     let oninput = props.on_input.reform(move |e| e);
     let onkeyenter = props.on_key_enter.reform(move |e| e);
 
-    let style_main = use_style!("color: var(--text-color-fifth); margin: 0px;");
-    let style1 = use_style!("color: var(--text-color-third);");
-    let style2 = use_style!("color: var(--text-color-secondary);");
-    let style3 = use_style!("color: var(--text-color-quad);");
-
     let input_node_ref_clone = input_node_ref.clone();
     use_effect(move || {
         if let Some(input) = input_node_ref_clone.cast::<HtmlInputElement>() {
@@ -40,14 +37,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 
     html!(
         <div class="command-single-line">
-            <p class={style_main}>
-                <span class={style1}>{"guest"}</span> // possibly temp, with user login this would change
-                {"@"}
-                <span class={style2}>{"theorode.com"}</span>
-                {":"}
-                <span class={style3}>{"~"}</span> // temp, change to dir later
-                {"$"}
-            </p>
+            <UsernameText/>
             <div class="command-input">
                 <label for="command-input">
                     <input ref={input_node_ref}
@@ -142,6 +132,10 @@ fn app() -> Html {
                 align-items: stretch;
                 flex-direction: column;
                 justify-content: flex-start;
+                height: 100%;
+                overflow-y: auto;
+                overflow-x: hidden;
+                bottom: 0px;
             } 
 
             div.command-single-line {
@@ -158,16 +152,13 @@ fn app() -> Html {
             }
 
             input.command-input {
-                width: 100%;
-            }
-
-            input.command-input {
                 background-color: var(--background-color);
                 border: none;
                 color: var(--text-color-main);
                 outline: none;
                 font-size: 1rem;
                 font-family: CascadiaCode, monospace;
+                width: 100%;
             }
 
             input.command-input-incorrect {
@@ -177,18 +168,38 @@ fn app() -> Html {
                 outline: none;
                 font-size: 1rem;
                 font-family: CascadiaCode, monospace;
+                caret-color: var(--text-color-main);
+                width: 100%;
+            }
+
+            div.user-command {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                margin: 0px;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+
+            ul.command-history {
+                margin: 0px;
+                padding: 0px;
             }
 
         ")}/>
             <div class="main-screen">
-                <h1>{ "Hello World!" }</h1>
+                <PreviousCommands command_history={command_history.borrow().clone()}/>
                 <CommandEnterLine
                     on_input={oncommandinput}
                     node_ref = {command_node_ref}
                     on_key_enter = {onkeyenter}
                     input_style = {input_text_style}
                 />
-                <p> {command_history.borrow().clone()}</p>
+                // <p> {command_history.borrow().clone()}</p>
             </div>
         </>
     }
