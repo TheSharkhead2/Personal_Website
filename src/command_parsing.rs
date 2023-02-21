@@ -2,7 +2,7 @@ use stylist::css;
 use stylist::yew::use_style;
 use yew::prelude::*;
 
-use crate::basic_components::UsernameText;
+use crate::basic_components::{UserCommandWrapper, UsernameText};
 
 pub const SUPPORTED_COMMANDS: &[&str] = &["help"];
 
@@ -33,28 +33,15 @@ fn command_not_found(command: &str) -> Html {
     // get formatted string for help test
     let text = format!(
         "Command '{}' not found.\nAvailable commands:\n{:?}",
-        command, SUPPORTED_COMMANDS
+        command.to_owned(),
+        "help"
     );
 
     // we know that this was an invalid command so it should always have the invalid command color
     let invalid_text_color = css!("color: var(--text-color-incorrect); margin: 0px;");
 
     html! {
-        <>
-            <div class="user-command">
-                <div class="command-single-line">
-                    <UsernameText/>
-                    <div class = "command-input">
-                        <p class={invalid_text_color}>
-                            {command}
-                        </p>
-                    </div>
-                </div>
-                <p>
-                    {text}
-                </p>
-            </div>
-        </>
+        <UserCommandWrapper command_text={command.to_owned()} command_result={text} invalid_input={true}/>
     }
 }
 

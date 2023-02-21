@@ -1,3 +1,4 @@
+use stylist::css;
 use stylist::yew::use_style;
 use yew::prelude::*;
 
@@ -19,5 +20,43 @@ pub fn username_text() -> Html {
             <span class={style3}>{"~"}</span> // temp, change to dir later
             {"$"}
         </p>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct UserCommandWrapperProps {
+    pub command_text: String,
+    pub command_result: String,
+    pub invalid_input: bool, // whether or not to display text as invalid
+}
+
+/// Component which turns user entered command into object to distplay in command history/log
+#[function_component(UserCommandWrapper)]
+pub fn user_command_wrapper(props: &UserCommandWrapperProps) -> Html {
+    let invalid_text_color = css!("color: var(--text-color-incorrect); margin: 0px;");
+    let valid_text_color = css!("color: var(--text-color-main); margin: 0px;");
+
+    html! {
+        <>
+            <div class="user-command">
+                <div class="command-single-line">
+                    <UsernameText/>
+                    <div class = "command-input">
+                        if props.invalid_input {
+                            <p class={invalid_text_color}>
+                                {props.command_text.clone()}
+                            </p>
+                        } else {
+                            <p class={valid_text_color}>
+                                {props.command_text.clone()}
+                            </p>
+                        }
+                    </div>
+                </div>
+                <p>
+                    {props.command_result.clone()}
+                </p>
+            </div>
+        </>
     }
 }
