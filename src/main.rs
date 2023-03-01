@@ -160,6 +160,8 @@ fn app() -> Html {
                 font-size: 1rem;
                 font-family: CascadiaCode, monospace;
                 width: 100%;
+                padding: 0px;
+                padding-left: 2px;
             }
 
             input.command-input-incorrect {
@@ -171,6 +173,8 @@ fn app() -> Html {
                 font-family: CascadiaCode, monospace;
                 caret-color: var(--text-color-main);
                 width: 100%;
+                padding: 0px;
+                padding-left: 2px;
             }
 
             div.user-command {

@@ -2,7 +2,7 @@ use stylist::css;
 use stylist::yew::use_style;
 use yew::prelude::*;
 
-use crate::basic_components::{UserCommandHead, UserCommandWrapper, UsernameText};
+use crate::basic_components::{UserCommandHead, UserCommandHelp, UserCommandWrapper, UsernameText};
 
 pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head"];
 
@@ -25,7 +25,9 @@ pub fn parse_command(command: &str) -> Html {
         return command_not_found(command);
     }
 
-    if command == "help" {}
+    if command == "help" {
+        return html! {<UserCommandHelp command_text={command.to_owned()}/>};
+    }
 
     // head command gives introductory info for the website and me
     if command == "head" {
