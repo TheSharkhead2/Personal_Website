@@ -2,9 +2,9 @@ use stylist::css;
 use stylist::yew::use_style;
 use yew::prelude::*;
 
-use crate::basic_components::{UserCommandWrapper, UsernameText};
+use crate::basic_components::{UserCommandHead, UserCommandWrapper, UsernameText};
 
-pub const SUPPORTED_COMMANDS: &[&str] = &["help"];
+pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head"];
 
 /// Checks to see if the supplied command is valid
 pub fn valid_command(command: &str) -> bool {
@@ -25,6 +25,13 @@ pub fn parse_command(command: &str) -> Html {
         return command_not_found(command);
     }
 
+    if command == "help" {}
+
+    // head command gives introductory info for the website and me
+    if command == "head" {
+        return html! {<UserCommandHead command_text={command.to_owned()}/>};
+    }
+
     html! {}
 }
 
@@ -36,9 +43,6 @@ fn command_not_found(command: &str) -> Html {
         command.to_owned(),
         "help"
     );
-
-    // we know that this was an invalid command so it should always have the invalid command color
-    let invalid_text_color = css!("color: var(--text-color-incorrect); margin: 0px;");
 
     html! {
         <UserCommandWrapper command_text={command.to_owned()} command_result={text} invalid_input={true}/>

@@ -57,7 +57,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     let last_command_handle = use_state(String::default);
-    let command_history_handle = use_mut_ref(Vec::<String>::new); // store history of commands
+    let command_history_handle = use_mut_ref(|| vec![String::from("head")]); // store history of commands and start with head command "already run"
     let last_command = (*last_command_handle).clone();
     let command_history = (*command_history_handle).clone();
     let command_node_ref = use_node_ref();
@@ -142,6 +142,7 @@ fn app() -> Html {
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-start;
+                align-items: center;
             }
 
             div.command-input {
