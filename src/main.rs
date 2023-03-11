@@ -1,10 +1,14 @@
-use stylist::yew::{use_style, Global};
-use stylist::{css, style};
+use stylist::css;
+use stylist::yew::Global;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
+mod about;
 mod basic_components;
 mod command_parsing;
+mod head;
+mod help;
+mod projects;
 
 use basic_components::UsernameText;
 use command_parsing::{valid_command, PreviousCommands};
@@ -35,6 +39,14 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
         }
     });
 
+    let onblur = {
+        Callback::from(move |e: FocusEvent| {
+            if let Some(target) = e.target_dyn_into::<HtmlInputElement>() {
+                target.focus();
+            }
+        })
+    };
+
     html!(
         <div class="command-single-line">
             <UsernameText/>
@@ -43,6 +55,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                     <input ref={input_node_ref}
                         oninput={oninput}
                         onkeyup={onkeyenter}
+                        onblur={onblur}
                         id="command-input"
                         type="text"
                         class={&props.input_style.clone()}
@@ -107,6 +120,7 @@ fn app() -> Html {
                 --text-color-fifth: rgb(89, 98, 107);
                 --text-color-incorrect: rgb(156, 31, 31);
                 --background-color: rgb(36,37,38);
+                --text-color-main-transparent: rgba(200, 216, 230, 0.5);
             }
 
             body {

@@ -1,10 +1,12 @@
-use stylist::css;
-use stylist::yew::use_style;
 use yew::prelude::*;
 
-use crate::basic_components::{UserCommandHead, UserCommandHelp, UserCommandWrapper, UsernameText};
+use crate::about::UserCommandAbout;
+use crate::basic_components::UserCommandWrapper;
+use crate::head::UserCommandHead;
+use crate::help::UserCommandHelp;
+use crate::projects::UserCommandProjects;
 
-pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head"];
+pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head", "about", "projects"];
 
 /// Checks to see if the supplied command is valid
 pub fn valid_command(command: &str) -> bool {
@@ -20,30 +22,42 @@ pub fn valid_command(command: &str) -> bool {
 
 /// Takes in user command and parses it
 pub fn parse_command(command: &str) -> Html {
+    let command_args: Vec<String> = command.split(' ').map(|s| s.to_owned()).collect();
+
     // check to make sure the command is valid
     if !valid_command(command) {
-        return command_not_found(command);
+        return command_not_found(command, command_args);
     }
 
-    if command == "help" {
+    // help command gives information on avaliable commands
+    if command_args[0] == "help" {
         return html! {<UserCommandHelp command_text={command.to_owned()}/>};
     }
 
     // head command gives introductory info for the website and me
-    if command == "head" {
+    if command_args[0] == "head" {
         return html! {<UserCommandHead command_text={command.to_owned()}/>};
     }
 
-    html! {}
+    // about command gives more detailed information about me
+    if command_args[0] == "about" {
+        return html! {<UserCommandAbout command_text={command.to_owned()}/>};
+    }
+
+    if command_args[0] == "projects" {
+        return html! {<UserCommandProjects command_text={command.to_owned()} command_args={command_args}/>};
+    }
+
+    // here the command is in the SUPPORTED_COMMANDS array, but for some reason hasn't been implemented yet. Return invalid command as safety
+    command_not_found(command, command_args)
 }
 
 /// Returns Html element for when the command is not found
-fn command_not_found(command: &str) -> Html {
+fn command_not_found(command: &str, command_args: Vec<String>) -> Html {
     // get formatted string for help test
     let text = format!(
-        "Command '{}' not found.\nAvailable commands:\n{:?}",
-        command.to_owned(),
-        "help"
+        "Command '{}' not found.\nTry 'help' for the list of valid commands.",
+        command_args[0]
     );
 
     html! {
