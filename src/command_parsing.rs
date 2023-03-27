@@ -22,7 +22,7 @@ pub fn valid_command(command: &str) -> bool {
 
 /// Takes in user command and parses it
 pub fn parse_command(command: &str) -> Html {
-    let command_args: Vec<String> = command.split(' ').map(|s| s.to_owned()).collect();
+    let command_args: Vec<String> = command.split_whitespace().map(|s| s.to_owned()).collect();
 
     // check to make sure the command is valid
     if !valid_command(command) {

@@ -1,6 +1,6 @@
 use stylist::css;
 use stylist::yew::Global;
-use web_sys::HtmlInputElement;
+use web_sys::{Element, HtmlInputElement};
 use yew::prelude::*;
 
 mod about;
@@ -89,14 +89,23 @@ fn app() -> Html {
     };
 
     let onkeyenter = {
+        let command_node_ref = command_node_ref.clone();
+
         Callback::from(move |e: KeyboardEvent| {
             if e.key() == "Enter" {
                 let target = e.target_dyn_into::<HtmlInputElement>();
                 if let Some(target) = target {
                     let input = target.value();
                     target.set_value("");
-                    (*command_history_handle.borrow_mut()).push(input.clone());
-                    last_command_handle.set(input);
+                    if input.split_whitespace().next().is_some() {
+                        (*command_history_handle.borrow_mut()).push(input.clone());
+                        last_command_handle.set(input);
+                    }
+                }
+
+                let command_ref = command_node_ref.cast::<Element>();
+                if let Some(command_ref) = command_ref {
+                    command_ref.scroll_into_view_with_bool(false);
                 }
             }
         })
@@ -132,6 +141,7 @@ fn app() -> Html {
                 margin: 5px;
                 padding: 15px;
                 flex-grow: 1; 
+                overflow: hidden;
             }
 
             html {
@@ -218,7 +228,6 @@ fn app() -> Html {
                     on_key_enter = {onkeyenter}
                     input_style = {input_text_style}
                 />
-                // <p> {command_history.borrow().clone()}</p>
             </div>
         </>
     }
