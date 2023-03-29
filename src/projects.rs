@@ -95,6 +95,60 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
             .contains(&&project_arg_name_lowercase[..])
         {
             content_html = html! {<VariousSortingAlgorithms/>};
+        } else if [
+            "image processing",
+            "image processing algorithms",
+            "canny edge detection",
+            "seam carving",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<ImageProcessingAlgorithms />};
+        } else if ["sha256", "sha256 implementation", "sha implementation"]
+            .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<Sha256Implementation />};
+        } else if ["rsa", "rsa encryption", "rsa encryption implementation"]
+            .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<RsaEncryption />};
+        } else if [
+            "three body",
+            "three body problem",
+            "three body simulation",
+            "third body simulation",
+            "three body problem simulation",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<ThreeBodyProblemSimulation />};
+        } else if [
+            "spotify recommendations",
+            "spotify recommendation engine",
+            "spotify recommendation",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<SpotifyRecommendationEngine />};
+        } else if [
+            "covid data analysis",
+            "covid19 data analysis",
+            "covid-19 data analysis",
+            "covid analysis",
+            "covid modeling",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<CovidDataAnalysis />};
+        } else if [
+            "text based rpg",
+            "text based role playing game",
+            "text-based rpg",
+            "text-based role playing game",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<TextBasedRolePlayingGame />};
         } else {
             // if no project is recognized, simply display an error message
             content_html = html! {
@@ -380,6 +434,106 @@ fn various_sorting_algorithms() -> Html {
             description={"This project is a collection of a few sorting algorithms that I implemented in my high school algorithms class. It also includes an implementation of AVL trees. As part of this project, I also did an analysis on the running time of each algorithm to insure it was implemented correctly."}
             tech={vec![String::from("Julia")]}
             links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/list_sorting")]}
+        />
+    }
+}
+
+/// Function component for the image processing algorithms project (detailed)
+#[function_component(ImageProcessingAlgorithms)]
+fn image_processing_algorithms() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Image Processing Algorithms"}
+            project_date={"Sep 2021 - Dec 2021"}
+            description={"For my high school computer vision class I implemented numerous image processing algorithms all from scratch and all in Julia. These include: implementing a convolutional filter algorithm to build everything else upon, Canny edge detection, Harris corner detection, and finally seam carving. All algorithms were designed to be used as an external API that is simple to use."}
+            tech={vec![String::from("Julia")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/imageProcessing")]}
+        />
+    }
+}
+
+/// Function component for my SHA256 implementation project (detailed)
+#[function_component(Sha256Implementation)]
+fn sha256_implementation() -> Html {
+    html! {
+        <ProjectBrief
+            name={"SHA256 Implementation"}
+            project_date={"Nov 2021 - Dec 2021"}
+            description={"For this project, I implemented the SHA256 algorithm, and all its underlying logic, from scratch in Julia. This was a project I chose for my high school computer security class because I wanted to understand hashing algorithms better and I thought a good way of doing this was to implement one from the ground up.
+                        I learned a lot about how hashing accomplishes what it does from this project and it was generally a really fun project to work on."}
+            tech={vec![String::from("Julia")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/sha256")]}
+        />
+    }
+}
+
+/// Function component for my RSA encryption implementation (detailed)
+#[function_component(RsaEncryption)]
+fn rsa_encryption() -> Html {
+    html! {
+        <ProjectBrief
+            name={"RSA Encryption Implementation"}
+            project_date={"Nov 2021"}
+            description={"This was a project I picked for my computer security class in high school and I picked it because I wanted to learn more about how encryption functions generally. RSA seemed like a reasonable choice because it is widely used today. For this project, I implemented the RSA encryption algorithm from scratch in Julia. I was able to learn a lot from digging into the math behind the algorithm and writing the entire implementation myself."}
+            tech={vec![String::from("Julia")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/RSA")]}
+        />
+    }
+}
+
+/// Function component for my three body simulation project (detailed)
+#[function_component(ThreeBodyProblemSimulation)]
+fn three_body_problem_simulation() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Three Body Problem Simulation"}
+            project_date={"Nov 2021 - Dec 2021"}
+            description={"The three body problem is a famous problem from differential equations and physics which asks about the gravitational behavior of 3 objects. While for 2 bodies the behavior is entirely predictable, with a third body the motion becomes chaotic and it is impossible to perfectly predict the outcome in a system from the initial conditions. For my differential equations class, I implemented a simulation of the three body problem in order to demonstrate the situation and to look for patterns. In particular, my group wanted to confirm calculations like the position of Lagrange points, which I built the simulation to test and verify. The entire simulation is built off of the PyGame game engine in Python."}
+            tech={vec![String::from("Python")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/third_body_simulation")]}
+        />
+    }
+}
+
+/// Function component for Spotify recommendation engine
+#[function_component(SpotifyRecommendationEngine)]
+fn spotify_recommendation_engine() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Spotify Recommendation Engine"}
+            project_date={"Jan 2021 - Apr 2021"}
+            description={"The goal of this project was to offer a desktop client that could determine the likelihood that you would like a particular song. I used the song data available on Spotify in conjunction with a TensorFlow machine learning algorithm in order to build a model that predicted how much a user would like a particular song. In addition to the model, this project involved creating an interface through which users could rate songs in order to give the model labeled data to act upon. If I were to continue the project, the end goal would be to use this model in order to provide recommendations in the form of playlists for people."}
+            tech={vec![String::from("Python"), String::from("TensorFlow"), String::from("Pandas")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/SpotifyRecommendations")]}
+        />
+    }
+}
+
+/// Function component for COVID data analysis
+#[function_component(CovidDataAnalysis)]
+fn covid_data_analysis() -> Html {
+    html! {
+        <ProjectBrief
+            name={"COVID-19 Data Analysis"}
+            project_date={"May 2020 - Aug 2020"}
+            description={"I wanted to understand how the pandemic was changing, so I began this project as a way of looking at the case and death data in a way I understood. I used various predictive models to analyze the patterns in the data with a particular emphasis on predicting whether cases were going to continue to exponentially grow or level off in the near future. I also worked to develop intuitive ways of displaying the data so that the information it contained was properly conveyed."}
+            tech={vec![String::from("Python"), String::from("Pandas"), String::from("Matplotlib")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/COVID19_Modeling")]}
+        />
+    }
+}
+
+/// Function component for text based role-playing game
+#[function_component(TextBasedRolePlayingGame)]
+fn text_based_role_playing_game() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Text Based Role Playing Game"}
+            project_date={"Oct 2018 - Jan 2021"}
+            description={"I have always really enjoyed the complexity of building characters in RPGs (role playing games), so I spent almost a year building a text-based RPG game in Python that focused on the complexity of building a character through gear and abilities. I built a combat system that took into account dozens of factors from a player's gear and build in the game as well as a in-depth gear system which allowed for that significant customization.
+                        Following this initial game, I began working on a second version which involved creating a tile-based rendering system so that the player could interact with more than a terminal window. I never finished this second version, however."}
+            tech={vec![String::from("Python")]}
+            links={vec![(String::from("Version 1 GitHub"), r"https://github.com/TheSharkhead2/rpggame1"), (String::from("Version 2 GitHub"), r"https://github.com/TheSharkhead2/rpggame2")]}
         />
     }
 }

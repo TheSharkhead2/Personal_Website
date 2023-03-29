@@ -160,6 +160,7 @@ fn app() -> Html {
                 overflow-y: auto;
                 overflow-x: hidden;
                 bottom: 0px;
+                padding-left: 2px;
             } 
 
             div.command-single-line {
