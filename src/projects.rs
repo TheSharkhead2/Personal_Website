@@ -14,11 +14,10 @@ pub struct UserCommandProjectsProps {
 #[function_component(UserCommandProjects)]
 pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
     let text_color = css!("color: var(--text-color-main); margin: 0px; margin-left: 2px;");
-    let new_line_below = css!("padding-bottom: 1rem;");
 
     let mut content_html = html! {
         <>
-            <p class={new_line_below}> {"Here are some of my favorite projects! If you would like to learn more about a specific project you can run 'projects [project_name]'. For example: 'projects the game of gradients'."}</p>
+            <p> {"Below are some of the projects I have worked on! If you would like to learn more about a specific project you can run 'projects [project_name]'. For example: 'projects the game of gradients'."}</p>
             <ProjectsAll/>
         </>
     }; // blank html to change into what the command will display
@@ -68,8 +67,15 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
             content_html = html! {<MathCurriculum/>};
         } else if ["discord bot", "finnish"].contains(&&project_arg_name_lowercase[..]) {
             content_html = html! {<DiscordBot />};
-        } else if ["primality", "prime testing", "primality testing"]
-            .contains(&&project_arg_name_lowercase[..])
+        } else if [
+            "primality",
+            "prime testing",
+            "primality testing",
+            "primality testing algorithms exploration",
+            "primality testing algorithms",
+            "primality testing exploration",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
         {
             content_html = html! {<PrimalityTesting />};
         } else if ["quantum checkers"].contains(&&project_arg_name_lowercase[..]) {
@@ -175,6 +181,26 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
     }
 }
 
+/// Properties object for the project headline component (what to display in the project list)
+#[derive(Properties, PartialEq)]
+struct ProjectHeadlineProps {
+    pub name: &'static str,
+    pub description: &'static str,
+}
+
+/// Function component for the project headline component. Essentially the brief summary for the entire project list
+#[function_component(ProjectHeadline)]
+fn project_headline(props: &ProjectHeadlineProps) -> Html {
+    let project_css = css!("margin-left: 2rem;");
+    let project_description = css!("color: var(--text-color-main-transparent);");
+
+    html! {
+        <p class={project_css}>
+            {props.name.to_owned() + " - "} <span class={project_description}> {props.description} </span>
+        </p>
+    }
+}
+
 /// Properties object for the project breif component
 #[derive(Properties, PartialEq)]
 struct ProjectBriefProps {
@@ -240,37 +266,93 @@ fn project_brief(props: &ProjectBriefProps) -> Html {
 /// Function component for the content of the projects command when no project args are passed
 #[function_component(ProjectsAll)]
 fn projects_all() -> Html {
+    let section_header = css!("font-weight: bold; font-size: 1rem; padding-top: 1rem;");
+
     html! {
         <>
-            <ProjectBrief
-                name={"The Game of Gradients"}
-                project_date={"Nov 2022 - Jan 2023"}
-                description={"I led a small team in designing and creating a web game to teach the intuition behind gradient fields in vector calculus. My high school math teacher even replaced the last day of his MVC class with the game!"}
-                tech={vec![String::from("Rust"), String::from("Wasm"), String::from("Bevy")]}
-                links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/The_Game_of_Gradients"), (String::from("The Game!"), r"https://thesharkhead2.github.io/The_Game_of_Gradients/")]}
-            />
-            <ProjectBrief
+            <p class={section_header.clone()}>
+                {"My Favorites"}
+            </p>
+            <ProjectHeadline
                 name={"Spotify Analytics Dashboard"}
-                project_date={"Oct 2022 - Present"}
-                description={"The goal of this project is to make an all purpose analytics app for your Spotify listening history.
-                    There is a particular emphasis on your listening trends over time instead of just averages or cumulative data."}
-                tech={vec![String::from("TypeScript"), String::from("Rust"), String::from("Svelte"), String::from("Tauri"), String::from("D3.js")]}
-                links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/Spotify_Analytics_Dashboard")]}
+                description={"An analytics dashboard for visualizing trends in your music listening."}
             />
-            <ProjectBrief
+            <ProjectHeadline
+                name={"The Game of Gradients"}
+                description={"A game which develops intuition for gradient fields."}
+            />
+            <ProjectHeadline
+                name={"Shark Attack Data Analysis"}
+                description={"A dive into the data behind shark attacks."}
+            />
+            <ProjectHeadline
                 name={"Three Body Problem Simulation"}
-                project_date={"Nov 2021 - Dec 2021"}
-                description={"I developed an interactive simulation of the three body problem in order to demonstrate the intricacies of this chaotic physics problem. The simulation allows you to view the path of the third body using arbitrary starting conditions and at the precise Lagrange points."}
-                tech={vec![String::from("Python"), String::from("PyGame")]}
-                links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/third_body_simulation")]}
+                description={"A simulation of the chaotic, 3-body gravitational system."}
             />
-            // <ProjectBreif
-            //     name={"Rust Spotify API Wrapper"}
-            //     project_date={"Aug 2022 - Present"}
-            //     description={"This project is being developed side by side with my Spotify Analytics Dashboard. It is designed to be a simple wrapper for interacting with the Spotify API that focuses on clarity and reliability in the content it returns."}
-            //     tech={vec![String::from("Rust")]}
-            //     links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/spotify.rs"), (String::from("crates.io"), r"https://crates.io/crates/spotifyrs")]}
-            // />
+
+            <p class={section_header.clone()}>
+                {"Other Fun Projects"}
+            </p>
+            <ProjectHeadline
+                name={"Spotify API Wrapper"}
+                description={"An intuitive API wrapper for the Spotify API intended to simplify the developer experience."}
+            />
+            <ProjectHeadline
+                name={"Writing and Teaching Math Curriculum"}
+                description={"I (re)designed curriculum for middle and high school mathematics and ran a pilot summer camp with the content."}
+            />
+            <ProjectHeadline
+                name={"Discord Bot"}
+                description={"A multi-purpose Discord bot for server management, data visualization and collection, and entertainment through puzzles, games, and more."}
+            />
+            <ProjectHeadline
+                name={"Spotify Recommendation Engine"}
+                description={"An application that aims to predict whether or not you will like a given song."}
+            />
+            <ProjectHeadline
+                name={"COVID-19 Data Analysis"}
+                description={"An exploration of the data behind the COVID-19 pandemic."}
+            />
+            <ProjectHeadline
+                name={"Text Based Role Playing Game"}
+                description={"An in-depth role playing game which is played entirely in the terminal."}
+            />
+            <ProjectHeadline
+                name={"Quantum Checkers"}
+                description={"A simulation of an academic game played with 2 qubits."}
+            />
+
+            <p class={section_header.clone()}>
+                {"Algorithm Implementations and Explorations"}
+            </p>
+            <ProjectHeadline
+                name={"Image Processing Algorithms"}
+                description={"A from-scratch, image processing library containing a convolutional filter algorithm, Canny edge detection, Harris corner detection, and seam carving."}
+            />
+            <ProjectHeadline
+                name={"Primality Testing Exploration"}
+                description={"An exploration of various primality testing algorithms by implementing and analyzing them."}
+            />
+            <ProjectHeadline
+                name={"Knapsack Problem Exploration"}
+                description={"An implementation of the dynamic programming solution to the knapsack problem in order to explore dynamic programming."}
+            />
+            <ProjectHeadline
+                name={"SHA256 Implementation"}
+                description={"An implementation of the SHA256 hashing algorithm from scratch."}
+            />
+            <ProjectHeadline
+                name={"RSA Encryption Implementation"}
+                description={"An implementation of RSA encryption from scratch."}
+            />
+            <ProjectHeadline
+                name={"PageRank Implementation"}
+                description={"An implementation of the PageRank algorithm."}
+            />
+            <ProjectHeadline
+                name={"Various Sorting Algorithm Implementations"}
+                description={"A few sorting algorithm implementations, like insertion sort, and an implementation of AVL trees."}
+            />
         </>
     }
 }
@@ -370,10 +452,10 @@ fn discord_bot() -> Html {
 fn primality_testing() -> Html {
     html! {
         <ProjectBrief
-            name={"Primality Testing Algorithms Exploration"}
+            name={"Primality Testing Exploration"}
             project_date={"Mar 2022 - Jun 2022"}
             description={"I ended up completing the coursework for my algorithms class in high school about 3 months early, so for the rest of the year I decided to do an in-depth analysis of a particular type of algorithm, hence this project.
-                        Through this project I built up 5 primality testing algorithms from scratch in order to understand the inner workings of each algorithm. Additionally, I theoretically and experimentally analyzed the runtime of each algorithm.
+                        Through this project I built 5 primality testing algorithms from scratch in order to understand the inner workings of each algorithm. Additionally, I theoretically and experimentally analyzed the runtime of each algorithm.
                         In culmination I implemented the Miller-Rabin primality testing algorithm, which involved also implementing a fast modular exponentiation algorithm."}
             tech={vec![String::from("Julia")]}
             links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/Primality_Testing")]}

@@ -9,3 +9,4 @@ edition = "2021"
 yew = { version = "0.20", features = ["csr"] }
 stylist = { version = "0.11", features =  ["yew_integration"] }
 web-sys = { version = "0.3", features = ["Element"] }
+gloo-console = "0.2"

@@ -1,3 +1,4 @@
+use gloo_console::log;
 use stylist::css;
 use stylist::yew::Global;
 use web_sys::{Element, HtmlInputElement};
@@ -70,9 +71,13 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     let last_command_handle = use_state(String::default);
+    let arrow_keys_command_history_index_handle = use_state(|| 0); // which index in the history the up/down arrow actions are
     let command_history_handle = use_mut_ref(|| vec![String::from("head")]); // store history of commands and start with head command "already run"
+    let entire_command_history_handle = use_mut_ref(Vec::<String>::new); // entire command history that can't be wiped
     let last_command = (*last_command_handle).clone();
+    let arrow_keys_command_history_index = *arrow_keys_command_history_index_handle;
     let command_history = (*command_history_handle).clone();
+    let entire_command_history = (*entire_command_history_handle).clone();
     let command_node_ref = use_node_ref();
 
     let oncommandinput = {
@@ -99,13 +104,26 @@ fn app() -> Html {
                     target.set_value("");
                     if input.split_whitespace().next().is_some() {
                         (*command_history_handle.borrow_mut()).push(input.clone());
+                        (*entire_command_history_handle.borrow_mut()).push(input.clone());
                         last_command_handle.set(input);
+                        arrow_keys_command_history_index_handle
+                            .set(entire_command_history.borrow().len() + 1); // increment the up/down arrow thingy by 1
                     }
                 }
 
                 let command_ref = command_node_ref.cast::<Element>();
                 if let Some(command_ref) = command_ref {
                     command_ref.scroll_into_view_with_bool(false);
+                }
+            } else if e.key() == "ArrowUp" && arrow_keys_command_history_index > 0 {
+                // don't run this logic if at top of history
+                let target = e.target_dyn_into::<HtmlInputElement>();
+                if let Some(target) = target {
+                    target.set_value(
+                        &entire_command_history.borrow()[arrow_keys_command_history_index - 1][..],
+                    ); // set input box value
+                    arrow_keys_command_history_index_handle
+                        .set(arrow_keys_command_history_index - 1); // decrement
                 }
             }
         })

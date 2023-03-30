@@ -56,6 +56,10 @@ fn generate_help_text() -> String {
             "Displays available commands and breif descriptions.",
         ),
         help_command_formatter("about", "More information about me! (If you're curious)"),
+        help_command_formatter(
+            "projects",
+            "A list of all the projects I have worked on with descriptions.",
+        ),
     ];
 
     command_info.join("\n")
