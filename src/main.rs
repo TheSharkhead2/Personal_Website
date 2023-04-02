@@ -1,7 +1,7 @@
 use gloo_console::log;
 use stylist::css;
 use stylist::yew::Global;
-use web_sys::{Element, HtmlInputElement};
+use web_sys::{Element, HtmlInputElement, KeyboardEvent};
 use yew::prelude::*;
 
 mod about;
@@ -48,6 +48,15 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
         })
     };
 
+    // prevent up and down arrow from changing place of cursor
+    let onkeydown = {
+        Callback::from(move |e: KeyboardEvent| {
+            if e.key() == "ArrowUp" || e.key() == "ArrowDown" {
+                e.prevent_default();
+            }
+        })
+    };
+
     html!(
         <div class="command-single-line">
             <UsernameText/>
@@ -56,6 +65,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                     <input ref={input_node_ref}
                         oninput={oninput}
                         onkeyup={onkeyenter}
+                        onkeydown={onkeydown}
                         onblur={onblur}
                         id="command-input"
                         type="text"
@@ -72,13 +82,19 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 fn app() -> Html {
     let last_command_handle = use_state(String::default);
     let arrow_keys_command_history_index_handle = use_state(|| 0); // which index in the history the up/down arrow actions are
-    let command_history_handle = use_mut_ref(|| vec![String::from("head")]); // store history of commands and start with head command "already run"
     let entire_command_history_handle = use_mut_ref(Vec::<String>::new); // entire command history that can't be wiped
+    let command_history_handle = use_mut_ref(|| vec![String::from("head")]); // store history of commands and start with head command "already run"
     let last_command = (*last_command_handle).clone();
     let arrow_keys_command_history_index = *arrow_keys_command_history_index_handle;
     let command_history = (*command_history_handle).clone();
     let entire_command_history = (*entire_command_history_handle).clone();
     let command_node_ref = use_node_ref();
+
+    // let onclearcommand = {
+    //     let command_history_handle = command_history_handle.clone();
+
+    //     Callback::from(move || command_history_handle.borrow_mut())
+    // };
 
     let oncommandinput = {
         let command_node_ref = command_node_ref.clone();
@@ -103,27 +119,60 @@ fn app() -> Html {
                     let input = target.value();
                     target.set_value("");
                     if input.split_whitespace().next().is_some() {
+                        // if last command is same don't save it
+                        if entire_command_history_handle.borrow().last() != Some(&input) {
+                            (*entire_command_history_handle.borrow_mut()).push(input.clone());
+                            arrow_keys_command_history_index_handle
+                                .set(entire_command_history.borrow().len() + 1);
+                            // increment the up/down arrow thingy by 1
+                        }
+
+                        // always push to total history as this is rendered off of
                         (*command_history_handle.borrow_mut()).push(input.clone());
-                        (*entire_command_history_handle.borrow_mut()).push(input.clone());
+
+                        // update this in order to update render (without this it won't re-render)
                         last_command_handle.set(input);
-                        arrow_keys_command_history_index_handle
-                            .set(entire_command_history.borrow().len() + 1); // increment the up/down arrow thingy by 1
                     }
                 }
 
+                // scroll to new element added from command
                 let command_ref = command_node_ref.cast::<Element>();
                 if let Some(command_ref) = command_ref {
                     command_ref.scroll_into_view_with_bool(false);
                 }
-            } else if e.key() == "ArrowUp" && arrow_keys_command_history_index > 0 {
+            } else if e.key() == "ArrowUp" {
                 // don't run this logic if at top of history
-                let target = e.target_dyn_into::<HtmlInputElement>();
-                if let Some(target) = target {
-                    target.set_value(
-                        &entire_command_history.borrow()[arrow_keys_command_history_index - 1][..],
-                    ); // set input box value
-                    arrow_keys_command_history_index_handle
-                        .set(arrow_keys_command_history_index - 1); // decrement
+                if arrow_keys_command_history_index > 0 {
+                    let target = e.target_dyn_into::<HtmlInputElement>();
+                    if let Some(target) = target {
+                        target.set_value(
+                            &entire_command_history.borrow()[arrow_keys_command_history_index - 1]
+                                [..],
+                        ); // set input box value
+                        last_command_handle.set(
+                            entire_command_history.borrow()[arrow_keys_command_history_index - 1]
+                                .clone(),
+                        );
+                        arrow_keys_command_history_index_handle
+                            .set(arrow_keys_command_history_index - 1); // decrement
+                    }
+                }
+            } else if e.key() == "ArrowDown" {
+                // only run if not at last index
+                if arrow_keys_command_history_index < entire_command_history.borrow().len() - 1 {
+                    let target = e.target_dyn_into::<HtmlInputElement>();
+                    if let Some(target) = target {
+                        target.set_value(
+                            &entire_command_history.borrow()[arrow_keys_command_history_index + 1]
+                                [..],
+                        );
+                        last_command_handle.set(
+                            entire_command_history.borrow()[arrow_keys_command_history_index + 1]
+                                .clone(),
+                        );
+                        arrow_keys_command_history_index_handle
+                            .set(arrow_keys_command_history_index + 1);
+                    }
                 }
             }
         })
