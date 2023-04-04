@@ -160,7 +160,8 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
             content_html = html! {
                 <>
                     <p> {"The project '"} {project_arg_name} {"' is not recognised. Try one of the following projects:"} </p>
-                    <p> {"Spotify Analytics Dashboard, Spotify API Wrapper, The Game of Gradients"} </p>
+                    <p> {"Spotify Analytics Dashboard, The Game of Gradients, Shark Attack Data Analysis, Three Body Problem Simulation, Spotify API Wrapper."} </p>
+                    <p> {"There are also more projects if you just run 'projects'!"} </p>
                 </>
             };
         }
@@ -527,7 +528,7 @@ fn image_processing_algorithms() -> Html {
         <ProjectBrief
             name={"Image Processing Algorithms"}
             project_date={"Sep 2021 - Dec 2021"}
-            description={"For my high school computer vision class I implemented numerous image processing algorithms all from scratch and all in Julia. These include: implementing a convolutional filter algorithm to build everything else upon, Canny edge detection, Harris corner detection, and finally seam carving. All algorithms were designed to be used as an external API that is simple to use."}
+            description={"For my high school computer vision class I implemented numerous image processing algorithms all from scratch and all in Julia. These include: implementing a convolutional filter algorithm to build everything else upon, Canny edge detection, Harris corner detection, and finally seam carving. All algorithms were designed to be used as an external API."}
             tech={vec![String::from("Julia")]}
             links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/imageProcessing")]}
         />

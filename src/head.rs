@@ -50,9 +50,9 @@ pub fn user_command_head(props: &UserCommandHeadProps) -> Html {
                     {r"    \/_/\/_/ \/____/\/____/\/____/ \/___/   \/_/"}
                 </pre>
                 <p class={description_format}>
-                    {"Welcome to my website! My name is Theo and I am currently a freshmen studying Computer Science and Math at Harvey Mudd College.
-                    This website is designed to show you a little bit about me, so feel free to explore. I wanted to build a website where the interaction 
-                    was similar to that of a Linux terminal, so if you want to look at the ways you can interact with the website you can run 'help' to get a list of commands."}
+                    {"Welcome to my website! My name is Theo and I am currently a student. Please feel free to explore this website and reach out with questions or if you want to share something, I love to talk about cool things with people!
+                    This website is meant to showcase some of the stuff I do. It is also modeled after a Linux terminal,
+                    so to interact you can simply type commands and hit 'enter'. A list of commands can be found by running the 'help' command."}
                 </p>
             </div>
         </>
