@@ -6,7 +6,7 @@ use crate::head::UserCommandHead;
 use crate::help::UserCommandHelp;
 use crate::projects::UserCommandProjects;
 
-pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head", "about", "projects"];
+pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head", "about", "projects", "clear"];
 
 /// Checks to see if the supplied command is valid
 pub fn valid_command(command: &str) -> bool {
@@ -21,7 +21,7 @@ pub fn valid_command(command: &str) -> bool {
 }
 
 /// Takes in user command and parses it
-pub fn parse_command(command: &str) -> Html {
+pub fn parse_command(command: &str, clear_command_callback: &Callback<bool>) -> Html {
     let command_args: Vec<String> = command.split_whitespace().map(|s| s.to_owned()).collect();
 
     // check to make sure the command is valid
@@ -48,6 +48,11 @@ pub fn parse_command(command: &str) -> Html {
         return html! {<UserCommandProjects command_text={command.to_owned()} command_args={command_args}/>};
     }
 
+    if command_args[0] == "clear" {
+        clear_command_callback.emit(false);
+        return html! {};
+    }
+
     // here the command is in the SUPPORTED_COMMANDS array, but for some reason hasn't been implemented yet. Return invalid command as safety
     command_not_found(command, command_args)
 }
@@ -69,6 +74,7 @@ fn command_not_found(command: &str, command_args: Vec<String>) -> Html {
 #[derive(Properties, PartialEq)]
 pub struct PreviousCommandsProps {
     pub command_history: Vec<String>,
+    pub clear_command_callback: Callback<bool>,
 }
 
 /// Component for all of user's previous commands
@@ -76,7 +82,7 @@ pub struct PreviousCommandsProps {
 pub fn previous_commands(props: &PreviousCommandsProps) -> Html {
     html! {
         // <ul class="command-history">
-            {for props.command_history.iter().map(|command| html!{<PreviousCommand command={command.clone()}/>})}
+            {for props.command_history.iter().map(|command| html!{<PreviousCommand command={command.clone()} clear_command_callback={&props.clear_command_callback}/>})}
         // </ul>
     }
 }
@@ -85,10 +91,11 @@ pub fn previous_commands(props: &PreviousCommandsProps) -> Html {
 #[derive(Properties, PartialEq)]
 pub struct PreviousCommandProps {
     pub command: String,
+    pub clear_command_callback: Callback<bool>,
 }
 
 /// Component for specific command in history
 #[function_component(PreviousCommand)]
 pub fn previous_command(props: &PreviousCommandProps) -> Html {
-    parse_command(&props.command[..]) // parse command to get html representation of output
+    parse_command(&props.command[..], &props.clear_command_callback) // parse command to get html representation of output
 }

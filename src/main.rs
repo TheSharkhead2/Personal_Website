@@ -90,11 +90,15 @@ fn app() -> Html {
     let entire_command_history = (*entire_command_history_handle).clone();
     let command_node_ref = use_node_ref();
 
-    // let onclearcommand = {
-    //     let command_history_handle = command_history_handle.clone();
+    let onclearcommand = {
+        let command_history_handle = command_history_handle.clone();
+        let last_command_handle = last_command_handle.clone();
 
-    //     Callback::from(move || command_history_handle.borrow_mut())
-    // };
+        Callback::from(move |_: bool| {
+            *command_history_handle.borrow_mut() = vec![];
+            last_command_handle.set(String::from("clear"));
+        })
+    };
 
     let oncommandinput = {
         let command_node_ref = command_node_ref.clone();
@@ -289,7 +293,11 @@ fn app() -> Html {
 
         ")}/>
             <div class="main-screen">
-                <PreviousCommands command_history={command_history.borrow().clone()}/>
+                <PreviousCommands
+                    command_history={command_history.borrow().clone()}
+                    clear_command_callback={onclearcommand}
+                />
+
                 <CommandEnterLine
                     on_input={oncommandinput}
                     node_ref = {command_node_ref}
