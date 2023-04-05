@@ -2,11 +2,16 @@ use yew::prelude::*;
 
 use crate::about::UserCommandAbout;
 use crate::basic_components::UserCommandWrapper;
+use crate::github::GithubCommand;
 use crate::head::UserCommandHead;
 use crate::help::UserCommandHelp;
+use crate::linkedin::LinkedinCommand;
 use crate::projects::UserCommandProjects;
+use crate::resume::ResumeCommand;
 
-pub const SUPPORTED_COMMANDS: &[&str] = &["help", "head", "about", "projects", "clear"];
+pub const SUPPORTED_COMMANDS: &[&str] = &[
+    "help", "head", "about", "projects", "clear", "github", "linkedin", "resume",
+];
 
 /// Checks to see if the supplied command is valid
 pub fn valid_command(command: &str) -> bool {
@@ -51,6 +56,18 @@ pub fn parse_command(command: &str, clear_command_callback: &Callback<bool>) -> 
     if command_args[0] == "clear" {
         clear_command_callback.emit(false);
         return html! {};
+    }
+
+    if command_args[0] == "github" {
+        return html! {<GithubCommand command_text={command.to_owned()} />};
+    }
+
+    if command_args[0] == "linkedin" {
+        return html! {<LinkedinCommand command_text={command.to_owned()} />};
+    }
+
+    if command_args[0] == "resume" {
+        return html! {<ResumeCommand command_text={command.to_owned()} />};
     }
 
     // here the command is in the SUPPORTED_COMMANDS array, but for some reason hasn't been implemented yet. Return invalid command as safety

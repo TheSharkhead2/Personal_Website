@@ -155,6 +155,8 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
         .contains(&&project_arg_name_lowercase[..])
         {
             content_html = html! {<TextBasedRolePlayingGame />};
+        } else if ["project creator", "pjcr"].contains(&&project_arg_name_lowercase[..]) {
+            content_html = html! {<ProjectCreator />};
         } else {
             // if no project is recognized, simply display an error message
             content_html = html! {
@@ -297,6 +299,10 @@ fn projects_all() -> Html {
             <ProjectHeadline
                 name={"Spotify API Wrapper"}
                 description={"An intuitive API wrapper for the Spotify API intended to simplify the developer experience."}
+            />
+            <ProjectHeadline
+                name={"Project Creator"}
+                description={"An all purpose command-line tool for creating projects."}
             />
             <ProjectHeadline
                 name={"Writing and Teaching Math Curriculum"}
@@ -617,6 +623,20 @@ fn text_based_role_playing_game() -> Html {
                         Following this initial game, I began working on a second version which involved creating a tile-based rendering system so that the player could interact with more than a terminal window. I never finished this second version, however."}
             tech={vec![String::from("Python")]}
             links={vec![(String::from("Version 1 GitHub"), r"https://github.com/TheSharkhead2/rpggame1"), (String::from("Version 2 GitHub"), r"https://github.com/TheSharkhead2/rpggame2")]}
+        />
+    }
+}
+
+/// Function component for the project creator project
+#[function_component(ProjectCreator)]
+fn project_creator() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Project Creator"}
+            project_date={"Feb 2022 - Present"}
+            description={"I was irritated that for many projects I was creating the same file structure over and over for every project I made. So, I designed an all-purpose project creation tool in the command line. The first version is written in Julia and weird to use, but the newer version is written in Rust and easily installed using Cargo."}
+            tech={vec![String::from("Rust"), String::from("Julia")]}
+            links={vec![(String::from("crates.io"), r"https://crates.io/crates/pjcr"), (String::from("Version 2 GitHub"), r"https://github.com/TheSharkhead2/Project_Creator_2"), (String::from("Version 1 GitHub"), r"https://github.com/TheSharkhead2/Project_Creator")]}
         />
     }
 }

@@ -75,6 +75,18 @@ pub fn user_command_help(props: &UserCommandHelpProps) -> Html {
                 command_name={String::from("clear")}
                 command_description={String::from("Clears the screen.")}
             />
+            <HelpCommandDescription
+                command_name={String::from("github")}
+                command_description={String::from("A link to my GitHub!")}
+            />
+            <HelpCommandDescription
+                command_name={String::from("linkedin")}
+                command_description={String::from("A link to my LinkedIn!")}
+            />
+            <HelpCommandDescription
+                command_name={String::from("resume")}
+                command_description={String::from("A link to my resume!")}
+            />
         </div>
     }
 }

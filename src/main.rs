@@ -7,9 +7,12 @@ use yew::prelude::*;
 mod about;
 mod basic_components;
 mod command_parsing;
+mod github;
 mod head;
 mod help;
+mod linkedin;
 mod projects;
+mod resume;
 
 use basic_components::UsernameText;
 use command_parsing::{valid_command, PreviousCommands};
