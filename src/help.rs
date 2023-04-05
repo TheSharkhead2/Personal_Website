@@ -18,7 +18,7 @@ fn help_command_description(props: &HelpCommandDescriptionProps) -> Html {
     // have all the divs line up with 15 characters for command name and description
     let margin = 15 - props.command_name.len();
     let command_name = Style::new(format!(
-        "font-weight: 500; margin-left: 1ch; margin-right: {margin}ch;"
+        "font-weight: 500; margin-left: 1ch; margin-right: {margin}ch; color: var(--text-color-quad);"
     ))
     .expect("failed to create style");
 
@@ -52,9 +52,6 @@ pub fn user_command_help(props: &UserCommandHelpProps) -> Html {
                     </p>
                 </div>
             </div>
-            <p class={available_commands_title}>
-                {"Available commands:"}
-            </p>
             <HelpCommandDescription
                 command_name={String::from("head")}
                 command_description={String::from("Displays simple heading information about the website.")}

@@ -285,8 +285,8 @@ fn app() -> Html {
             }
 
             p {
-                margin-top: 0px;
-                margin-bottom: 0px;
+                margin-top: 1px;
+                margin-bottom: 1px;
             }
 
             ul.command-history {

@@ -6,7 +6,7 @@ use yew::prelude::*;
 #[function_component(UsernameText)]
 pub fn username_text() -> Html {
     // define basic color styles for use here
-    let style_main = use_style!("color: var(--text-color-fifth); margin: 0px;");
+    let style_main = use_style!("color: var(--text-color-fifth); margin: 1px 0px 1px 0px;");
     let style1 = use_style!("color: var(--text-color-third);");
     let style2 = use_style!("color: var(--text-color-secondary);");
     let style3 = use_style!("color: var(--text-color-quad);");
