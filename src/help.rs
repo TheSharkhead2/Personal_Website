@@ -40,7 +40,6 @@ pub struct UserCommandHelpProps {
 #[function_component(UserCommandHelp)]
 pub fn user_command_help(props: &UserCommandHelpProps) -> Html {
     let text_color = css!("color: var(--text-color-main); margin: 0px; margin-left: 2px;");
-    let available_commands_title = css!("font-weight: 600;");
 
     html! {
         <div class="user-command">
@@ -53,6 +52,22 @@ pub fn user_command_help(props: &UserCommandHelpProps) -> Html {
                 </div>
             </div>
             <HelpCommandDescription
+                command_name={String::from("about")}
+                command_description={String::from("More information about me! (If you're curious)")}
+            />
+            <HelpCommandDescription
+                command_name={String::from("clear")}
+                command_description={String::from("Clears the screen.")}
+            />
+            <HelpCommandDescription
+                command_name={String::from("echo")}
+                command_description={String::from("Print any text to the screen.")}
+            />
+            <HelpCommandDescription
+                command_name={String::from("github")}
+                command_description={String::from("A link to my GitHub!")}
+            />
+            <HelpCommandDescription
                 command_name={String::from("head")}
                 command_description={String::from("Displays simple heading information about the website.")}
             />
@@ -61,24 +76,12 @@ pub fn user_command_help(props: &UserCommandHelpProps) -> Html {
                 command_description={String::from("Displays available commands and breif descriptions.")}
             />
             <HelpCommandDescription
-                command_name={String::from("about")}
-                command_description={String::from("More information about me! (If you're curious)")}
+                command_name={String::from("linkedin")}
+                command_description={String::from("A link to my LinkedIn!")}
             />
             <HelpCommandDescription
                 command_name={String::from("projects")}
                 command_description={String::from("A list of all the projects I have worked on with descriptions.")}
-            />
-            <HelpCommandDescription
-                command_name={String::from("clear")}
-                command_description={String::from("Clears the screen.")}
-            />
-            <HelpCommandDescription
-                command_name={String::from("github")}
-                command_description={String::from("A link to my GitHub!")}
-            />
-            <HelpCommandDescription
-                command_name={String::from("linkedin")}
-                command_description={String::from("A link to my LinkedIn!")}
             />
             <HelpCommandDescription
                 command_name={String::from("resume")}

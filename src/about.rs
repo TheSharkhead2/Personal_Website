@@ -13,7 +13,9 @@ pub struct UserCommandAboutProps {
 #[function_component(UserCommandAbout)]
 pub fn user_command_about(props: &UserCommandAboutProps) -> Html {
     let text_color = css!("color: var(--text-color-main); margin: 0px; margin-left: 2px;");
-    let paragraph_break = css!("margin-top: 1rem;");
+
+    let description_line_break = css!("margin-bottom: 1rem;");
+    let command_color = css!("color: var(--text-color-quad);");
 
     html! {
         <div class="user-command">
@@ -48,11 +50,21 @@ pub fn user_command_about(props: &UserCommandAboutProps) -> Html {
             //     {"If I have somehow interested you feel free to reach out! I would love to talk about anything here or just learn about what you love. It is amazing to talk with people about their passions and I will never pass up that opportunity."}
             // </p>
 
-            <p>
-                {"Hello, my name is Theo and I am currently studying at Harvey Mudd College (class of 2026). I am pursing degrees in both computer science and math. I love to explore the world of academics largely, but when I am writing a proof or building an efficient algorithm, I feel the most at home. This is so much so that I spend a lot of my time outside of school working on programming projects relating to topics I find interesting (see 'projects'). I was also a performing magician a few years ago and I love puzzles, skiing, and tennis (plus I play a few video games here and there)."}
+            // <p>
+            //     {"Hello, my name is Theo and I am currently studying at Harvey Mudd College (class of 2026). I am pursing degrees in both computer science and math. I love to explore the world of academics largely, but when I am writing a proof or building an efficient algorithm, I feel the most at home. This is so much so that I spend a lot of my time outside of school working on programming projects relating to topics I find interesting (see 'projects'). I was also a performing magician a few years ago and I love puzzles, skiing, and tennis (plus I play a few video games here and there)."}
+            // </p>
+            // <p>
+            //     {"Feel free to look around at what I have here and if you have any questions, or just want to talk about something interesting, contact me! (Here is an email: theorodester@gmail.com)"}
+            // </p>
+
+            <p class={description_line_break.clone()}>
+                {"Hello, my name is Theo and I am currently studying at Harvey Mudd College (class of 2026). I am pursing degrees in both computer science and math."}
             </p>
-            <p>
-                {"Feel free to look around at what I have here and if you have any questions, or just want to talk about something interesting, contact me! (Here is an email: theorodester@gmail.com)"}
+            <p class={description_line_break.clone()}>
+                {"I am interested in data analytics, simulation, and building consumer-oriented applications. In addition, I find true joy in mathematical proofs :). You should check out some of the stuff I do through '"} <span class={command_color}> {"projects"} </span> {"'!"}
+            </p>
+            <p class={description_line_break}>
+                {"Some of my other interests include: magic (sleight of hand), tennis, skiing, and puzzles."}
             </p>
         </div>
     }

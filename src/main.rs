@@ -1,12 +1,13 @@
 use gloo_console::log;
 use stylist::css;
 use stylist::yew::Global;
-use web_sys::{Element, HtmlInputElement, KeyboardEvent};
+use web_sys::{window, Element, HtmlInputElement, KeyboardEvent};
 use yew::prelude::*;
 
 mod about;
 mod basic_components;
 mod command_parsing;
+mod echo;
 mod github;
 mod head;
 mod help;
@@ -30,9 +31,6 @@ pub struct CommandEnterLineProps {
 fn command_enter_line(props: &CommandEnterLineProps) -> Html {
     let input_node_ref = props.node_ref.clone();
 
-    let input_value_handle = use_state(String::default);
-    let input_value = (*input_value_handle).clone();
-
     let oninput = props.on_input.reform(move |e| e);
     let onkeyenter = props.on_key_enter.reform(move |e| e);
 
@@ -42,14 +40,6 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
             input.focus();
         }
     });
-
-    let onblur = {
-        Callback::from(move |e: FocusEvent| {
-            if let Some(target) = e.target_dyn_into::<HtmlInputElement>() {
-                target.focus();
-            }
-        })
-    };
 
     // prevent up and down arrow from changing place of cursor
     let onkeydown = {
@@ -69,7 +59,6 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
                         oninput={oninput}
                         onkeyup={onkeyenter}
                         onkeydown={onkeydown}
-                        onblur={onblur}
                         id="command-input"
                         type="text"
                         class={&props.input_style.clone()}
@@ -92,6 +81,17 @@ fn app() -> Html {
     let command_history = (*command_history_handle).clone();
     let entire_command_history = (*entire_command_history_handle).clone();
     let command_node_ref = use_node_ref();
+
+    // focus input element when clicking on screen
+    let on_screen_click = {
+        let input_node_ref = command_node_ref.clone();
+
+        Callback::from(move |_| {
+            if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
+                input.focus();
+            }
+        })
+    };
 
     let onclearcommand = {
         let command_history_handle = command_history_handle.clone();
@@ -132,10 +132,42 @@ fn app() -> Html {
                             arrow_keys_command_history_index_handle
                                 .set(entire_command_history.borrow().len() + 1);
                             // increment the up/down arrow thingy by 1
+                        } else {
+                            arrow_keys_command_history_index_handle
+                                .set(entire_command_history.borrow().len());
                         }
 
                         // always push to total history as this is rendered off of
                         (*command_history_handle.borrow_mut()).push(input.clone());
+
+                        // check to see if a link needs to be openned with this command
+                        let command = input.split_whitespace().next().unwrap(); // already know this is something
+                        let window = window();
+                        if let Some(window) = window {
+                            if command == "github" {
+                                window
+                                    .open_with_url_and_target(
+                                        "https://github.com/TheSharkhead2",
+                                        "_blank",
+                                    )
+                                    .unwrap(); // don't really care if this errors
+                            } else if command == "linkedin" {
+                                window
+                                    .open_with_url_and_target(
+                                        "https://www.linkedin.com/in/theorode/",
+                                        "_blank",
+                                    )
+                                    .unwrap();
+                            // don't really care if this errors
+                            } else if command == "resume" {
+                                window
+                                    .open_with_url_and_target(
+                                        "https://github.com/TheSharkhead2/Resume/blob/main/resume.pdf",
+                                        "_blank",
+                                    )
+                                    .unwrap(); // don't really care if this errors
+                            }
+                        }
 
                         // update this in order to update render (without this it won't re-render)
                         last_command_handle.set(input);
@@ -295,7 +327,7 @@ fn app() -> Html {
             }
 
         ")}/>
-            <div class="main-screen">
+            <div class="main-screen" onclick={on_screen_click}>
                 <PreviousCommands
                     command_history={command_history.borrow().clone()}
                     clear_command_callback={onclearcommand}

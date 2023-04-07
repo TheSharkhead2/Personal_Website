@@ -25,7 +25,7 @@ pub fn linkedin_command(props: &LinkedinCommandProps) -> Html {
                 </div>
             </div>
             <p>
-                {"Check out my LinkedIn here: "} <a href="https://www.linkedin.com/in/theorode/" target="_blank"> {"linkedin.com/in/theorode"} </a>
+                {"Opening "} <a href="https://www.linkedin.com/in/theorode/" target="_blank"> {"linkedin.com/in/theorode"} </a> {" in a new tab."}
             </p>
         </div>
     }

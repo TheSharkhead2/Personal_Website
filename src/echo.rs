@@ -3,16 +3,19 @@ use yew::prelude::*;
 
 use crate::basic_components::UsernameText;
 
-/// Props for the resume object
+/// Properties object for the Echo Command component
 #[derive(Properties, PartialEq)]
-pub struct ResumeCommandProps {
+pub struct EchoCommandProps {
     pub command_text: String,
+    pub command_args: Vec<String>,
 }
 
-/// Function component for github command
-#[function_component(ResumeCommand)]
-pub fn resume_command(props: &ResumeCommandProps) -> Html {
+/// Echo command component
+#[function_component(EchoCommand)]
+pub fn echo_command(props: &EchoCommandProps) -> Html {
     let text_color = css!("color: var(--text-color-main); margin: 0px; margin-left: 2px;");
+
+    let command_body = props.command_args[1..].join(" ");
 
     html! {
         <div class="user-command">
@@ -25,7 +28,7 @@ pub fn resume_command(props: &ResumeCommandProps) -> Html {
                 </div>
             </div>
             <p>
-                {"Opening my "} <a href="https://github.com/TheSharkhead2/Resume/blob/main/resume.pdf" target="_blank"> {"resume"} </a> {" in a new tab."}
+                {command_body}
             </p>
         </div>
     }

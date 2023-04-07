@@ -26,7 +26,7 @@ pub fn github_command(props: &GithubCommandProps) -> Html {
                 </div>
             </div>
             <p>
-                {"Check out my GitHub here: "} <a href="https://github.com/TheSharkhead2" target="_blank"> {"github.com/TheSharkhead2"} </a>
+                {"Opening "} <a href="https://github.com/TheSharkhead2" target="_blank"> {"github.com/TheSharkhead2"} </a> {" in a new tab."}
             </p>
         </div>
     }
