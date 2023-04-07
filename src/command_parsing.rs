@@ -3,6 +3,7 @@ use yew::prelude::*;
 use crate::about::UserCommandAbout;
 use crate::basic_components::UserCommandWrapper;
 use crate::echo::EchoCommand;
+use crate::education::EducationCommand;
 use crate::github::GithubCommand;
 use crate::head::UserCommandHead;
 use crate::help::UserCommandHelp;
@@ -11,7 +12,16 @@ use crate::projects::UserCommandProjects;
 use crate::resume::ResumeCommand;
 
 pub const SUPPORTED_COMMANDS: &[&str] = &[
-    "help", "head", "about", "projects", "clear", "github", "linkedin", "resume", "echo",
+    "help",
+    "head",
+    "about",
+    "projects",
+    "clear",
+    "github",
+    "linkedin",
+    "resume",
+    "echo",
+    "education",
 ];
 
 /// Checks to see if the supplied command is valid
@@ -73,6 +83,10 @@ pub fn parse_command(command: &str, clear_command_callback: &Callback<bool>) -> 
 
     if command_args[0] == "echo" {
         return html! {<EchoCommand command_text={command.to_owned()} command_args={command_args} />};
+    }
+
+    if command_args[0] == "education" {
+        return html! {<EducationCommand command_text={command.to_owned()} command_args={command_args} />};
     }
 
     // here the command is in the SUPPORTED_COMMANDS array, but for some reason hasn't been implemented yet. Return invalid command as safety

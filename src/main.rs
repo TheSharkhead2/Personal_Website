@@ -8,6 +8,7 @@ mod about;
 mod basic_components;
 mod command_parsing;
 mod echo;
+mod education;
 mod github;
 mod head;
 mod help;
@@ -37,7 +38,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
     let input_node_ref_clone = input_node_ref.clone();
     use_effect(move || {
         if let Some(input) = input_node_ref_clone.cast::<HtmlInputElement>() {
-            input.focus();
+            input.focus().ok();
         }
     });
 
@@ -88,7 +89,7 @@ fn app() -> Html {
 
         Callback::from(move |_| {
             if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
-                input.focus();
+                input.focus().ok();
             }
         })
     };
