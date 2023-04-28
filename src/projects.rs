@@ -14,10 +14,11 @@ pub struct UserCommandProjectsProps {
 #[function_component(UserCommandProjects)]
 pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
     let text_color = css!("color: var(--text-color-main); margin: 0px; margin-left: 2px;");
+    let command_color = css!("color: var(--text-color-quad);");
 
     let mut content_html = html! {
         <>
-            <p> {"Below are some of the projects I have worked on! If you would like to learn more about a specific project you can run 'projects [project_name]'. For example: 'projects the game of gradients'."}</p>
+            <p> {"Below are some of the projects I have worked on! If you would like to learn more about a specific project you can run '"} <span class={command_color.clone()}> {"projects [PROJECT_NAME]"} </span>{"'. For example: '"} <span class={command_color.clone()}> {"projects the game of gradients"} </span> {"'."}</p>
             <ProjectsAll/>
         </>
     }; // blank html to change into what the command will display
@@ -27,7 +28,9 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
         let project_arg_name = props.command_args[1..].join(" "); // join all args into a single string
         let project_arg_name_lowercase = project_arg_name.to_lowercase();
 
-        if [
+        if ["student live", "studentlive"].contains(&&project_arg_name_lowercase[..]) {
+            content_html = html! {<StudentLive />};
+        } else if [
             "spotify analytics dashboard",
             "spotify analytics",
             "spotify dashboard",
@@ -67,6 +70,15 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
             content_html = html! {<MathCurriculum/>};
         } else if ["discord bot", "finnish"].contains(&&project_arg_name_lowercase[..]) {
             content_html = html! {<DiscordBot />};
+        } else if [
+            "quantum nlp",
+            "quantum natural language processing",
+            "quantum natural language",
+            "generative quantum model",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
+        {
+            content_html = html! {<QuantumNlp />};
         } else if [
             "primality",
             "prime testing",
@@ -163,7 +175,7 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
                 <>
                     <p> {"The project '"} {project_arg_name} {"' is not recognised. Try one of the following projects:"} </p>
                     <p> {"Spotify Analytics Dashboard, The Game of Gradients, Shark Attack Data Analysis, Three Body Problem Simulation, Spotify API Wrapper."} </p>
-                    <p> {"There are also more projects if you just run 'projects'!"} </p>
+                    <p> {"There are also more projects if you just run '"} <span class={command_color}> {"projects"} </span> {"'!"} </p>
                 </>
             };
         }
@@ -292,10 +304,18 @@ fn projects_all() -> Html {
                 name={"Three Body Problem Simulation"}
                 description={"A simulation of the chaotic, 3-body gravitational system."}
             />
+            <ProjectHeadline
+                name={"Quantum NLP Exploration"}
+                description={"Understanding quantum natural language processing."}
+            />
 
             <p class={section_header.clone()}>
                 {"Other Fun Projects"}
             </p>
+            <ProjectHeadline
+                name={"StudentLive"}
+                description={"5C Hackathon project. A classroom tool for organizing student's questions."}
+            />
             <ProjectHeadline
                 name={"Spotify API Wrapper"}
                 description={"An intuitive API wrapper for the Spotify API intended to simplify the developer experience."}
@@ -361,6 +381,21 @@ fn projects_all() -> Html {
                 description={"A few sorting algorithm implementations, like insertion sort, and an implementation of AVL trees."}
             />
         </>
+    }
+}
+
+/// Function component for the StudentLive hackathon project
+#[function_component(StudentLive)]
+fn student_live() -> Html {
+    html! {
+        <ProjectBrief
+            name={"StudentLive"}
+            project_date={"Apr 2023"}
+            description={"I built this project in 24 hours with a team of 4 people for the 5C Hackathon. This was my first hackathon and an incredibly gratifying experience. The application we built was a Chrome extension that would allow students to ask questions in a class and have them link directly to the slide (and time) they were asked on, allowing the teacher to have better analytics on where students were confused.
+                        Unfortunately, we were unable to complete all the features we wanted to implement, though the app we did create was capable of keeping the student on the teacher's current presentation slide. I specifically worked on the backend, allowing communication between the teacher and the students, as well as building out live slide integration with the front end."}
+            tech={vec![String::from("Rust"), String::from("JavaScript"), String::from("Actix"), String::from("Diesel.rs"), String::from("PostgreSQL"), String::from("Heroku")]}
+            links={vec![(String::from("Back-end GitHub"), r"https://github.com/TheSharkhead2/student_live_backend"), (String::from("Front-end GitHub"), r"https://github.com/Watcher1223/ClassyMe")]}
+        />
     }
 }
 
@@ -450,6 +485,21 @@ fn discord_bot() -> Html {
                         I used this project as a way to get experience developing software for customers. I made sure that I had proper versioning and tracked bugs reported by my friends. The bot was also an avenue for my love of puzzles as I put a lot of work into designing custom puzzles, and even entire digital escape rooms with stories that anyone on the server could interact with. At the end I was developing full on puzzle games with save states, user accounts, 
                         and inventories. There is almost nothing better than watching your friends solve an escape room you made custom for them! After consistently maintaining the bot for about two years, I decided to stop when we all left for college as we were spending a lot less time online. This is still one of my favorite projects I have worked on, and maybe I might come back to it one day!"}
             tech={vec![String::from("Python")]}
+        />
+    }
+}
+
+/// Function component for the quantum nlp project
+#[function_component(QuantumNlp)]
+fn quantum_nlp() -> Html {
+    html! {
+        <ProjectBrief
+            name={"Quantum NLP"}
+            project_date={"May 2022 - Jun 2022"}
+            description={"In Tai-Danae Bradley's PHD thesis, she describes a method for generating natural language that utilizes quantum logic. I wanted to explore this idea and so I proposed a project to build the algorithm she describes as a final project to both my linear algebra and quantum information class in high school.
+                        For this project, I worked to understand the math outlined in the thesis and then implement it in Julia. As this was a short (2 week) project, I didn't get beyond implementing the algorithm on bitstrings, though technically it is generalizable to a more complicated language. This was an incredibly fun but challenging project where I had no clue what was happening at all for a majority of the time I was working on it."}
+            tech={vec![String::from("Julia")]}
+            links={vec![(String::from("GitHub"), r"https://github.com/TheSharkhead2/Generative_Quantum_Model")]}
         />
     }
 }
