@@ -5,6 +5,7 @@ use web_sys::{window, Element, HtmlInputElement, KeyboardEvent};
 use yew::prelude::*;
 
 mod about;
+mod auto_complete;
 mod basic_components;
 mod command_parsing;
 mod echo;
@@ -16,6 +17,7 @@ mod linkedin;
 mod projects;
 mod resume;
 
+use auto_complete::auto_complete;
 use basic_components::UsernameText;
 use command_parsing::{valid_command, PreviousCommands};
 
@@ -112,6 +114,8 @@ fn app() -> Html {
             let input = command_node_ref.cast::<HtmlInputElement>();
 
             if let Some(input) = input {
+                let auto_complete_result = auto_complete(input.value().clone());
+                log!(auto_complete_result);
                 last_command_handle.set(input.value());
             }
         })

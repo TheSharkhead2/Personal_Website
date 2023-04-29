@@ -109,8 +109,12 @@ pub fn user_command_projects(props: &UserCommandProjectsProps) -> Html {
         .contains(&&project_arg_name_lowercase[..])
         {
             content_html = html! {<PageRankImplementation/>};
-        } else if ["various sorting algorithms", "sorting algorithms"]
-            .contains(&&project_arg_name_lowercase[..])
+        } else if [
+            "various sorting algorithms",
+            "sorting algorithms",
+            "various sorting algorithm implementations",
+        ]
+        .contains(&&project_arg_name_lowercase[..])
         {
             content_html = html! {<VariousSortingAlgorithms/>};
         } else if [
