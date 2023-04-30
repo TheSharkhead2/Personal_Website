@@ -1,10 +1,10 @@
 # from: https://plippe.github.io/blog/2021/07/12/rust-wasm-github.html
 name: Continuous deployment
-on:
-  workflow_run:
-    branches: [main]
-    workflows: [Continuous integration]
-    types: [completed]
+on: [push]
+  # workflow_run:
+  #   branches: [main]
+  #   workflows: [Continuous integration]
+  #   types: [completed]
 
 jobs:
   release:
