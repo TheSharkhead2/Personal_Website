@@ -169,6 +169,8 @@ fn app() -> Html {
         let command_node_ref = command_node_ref.clone();
         let last_command_handle = last_command_handle.clone();
 
+        let autocomplete_result_handle = autocomplete_result_handle.clone();
+
         Callback::from(move |e: KeyboardEvent| {
             if e.key() == "Enter" {
                 let target = e.target_dyn_into::<HtmlInputElement>();
@@ -274,6 +276,15 @@ fn app() -> Html {
                         last_command_handle.set(autocomplete_suggestion);
                     }
                 }
+            }
+
+            // reset autocomplete
+            let input = command_node_ref.cast::<HtmlInputElement>();
+
+            if let Some(input) = input {
+                autocomplete_result_handle.set(auto_complete(input.value().clone()));
+
+                last_command_handle.set(input.value());
             }
         })
     };
