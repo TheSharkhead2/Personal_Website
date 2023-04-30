@@ -27,8 +27,14 @@ pub fn eductation_command(props: &EducationCommandProps) -> Html {
             </p>
         };
 
-        if ["the nueva school", "nueva", "nueva school", "high school"]
-            .contains(&&education_arg_name_lowercase[..])
+        if [
+            "the nueva school",
+            "nueva",
+            "nueva school",
+            "high school",
+            "nueva high school",
+        ]
+        .contains(&&education_arg_name_lowercase[..])
         {
             content_html = html! {<NuevaSchoolClasses />};
         } else if [

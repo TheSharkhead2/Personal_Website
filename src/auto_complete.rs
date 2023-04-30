@@ -33,7 +33,7 @@ pub fn auto_complete(current: String) -> Option<String> {
 
     // loop through all possible commands and look for match
     for possible_command in SUPPORTED_COMMANDS {
-        if possible_command.contains(&&current[..]) {
+        if possible_command.starts_with(&&current[..]) {
             // if the first part matches, then return command complete
             if possible_command == &&current[..] {
                 // return None on exact match
@@ -70,14 +70,16 @@ fn education_auto_complete(current: String, current_args: Vec<String>) -> Option
 
     // match to hmc
     if "harvey mudd college".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Harvey Mudd College"));
+        return Some(String::from("education Harvey Mudd College"));
     } else if "hmc".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("HMC"));
+        return Some(String::from("education HMC"));
     }
 
     // match to nueva
-    if "nueva high school".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Nueva High School"));
+    if "the nueva school".starts_with(&current_arg_name_lowercase[..]) {
+        return Some(String::from("education The Nueva School"));
+    } else if "nueva high school".starts_with(&current_arg_name_lowercase[..]) {
+        return Some(String::from("education Nueva High School"));
     }
 
     None
@@ -111,120 +113,124 @@ fn projects_auto_complete(current: String, current_args: Vec<String>) -> Option<
 
     // match StudentLive
     if "studentlive".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("StudentLive"));
+        return Some(String::from("projects StudentLive"));
     } else if "student live".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Student Live"));
+        return Some(String::from("projects Student Live"));
     }
 
     // match spotify analytics dashboard
     if "spotify analytics dashboard".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Spotify Analytics Dashboard"));
+        return Some(String::from("projects Spotify Analytics Dashboard"));
     }
 
     // match spotify api
     if "spotify api wrapper".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Spotify API Wrapper"));
+        return Some(String::from("projects Spotify API Wrapper"));
     }
 
     // match the game of gradients
     if "the game of gradients".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("The Game of Gradients"));
+        return Some(String::from("projects The Game of Gradients"));
     } else if "game of gradients".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Game of Gradients"));
+        return Some(String::from("projects Game of Gradients"));
     }
 
     // match shark attack data analysis
     if "shark attack data analysis".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Shark Attack Data Analysis"));
+        return Some(String::from("projects Shark Attack Data Analysis"));
     }
 
     // match math curriculum
     if "writing and teaching math curriculum".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Writing and Teaching Math Curriculum"));
+        return Some(String::from(
+            "projects Writing and Teaching Math Curriculum",
+        ));
     } else if "math curriculum".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Math Curriculum"));
+        return Some(String::from("projects Math Curriculum"));
     }
 
     // match discord bot
     if "discord bot".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Discord Bot"));
+        return Some(String::from("projects Discord Bot"));
     } else if "finnish".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Finnish"));
+        return Some(String::from("projects Finnish"));
     }
 
     // match quantum nlp
     if "quantum natural language processing".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Quantum Natural Language Processing"));
+        return Some(String::from("projects Quantum Natural Language Processing"));
     } else if "quantum nlp".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Quantum NLP"));
+        return Some(String::from("projects Quantum NLP"));
     }
 
     // match primality testing exploration
     if "primaility testing exploration".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Primality Testing Exploration"));
+        return Some(String::from("projects Primality Testing Exploration"));
     }
 
     // match quantum checkers
     if "quantum checkers".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Quantum Checkers"));
+        return Some(String::from("projects Quantum Checkers"));
     }
 
     // match knapsack problem exploration
     if "knapsack problem exploration".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Knapsack Problem Exploration"));
+        return Some(String::from("projects Knapsack Problem Exploration"));
     }
 
     // match pagerank implementation
     if "pagerank implementation".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("PageRank Implementation"));
+        return Some(String::from("projects PageRank Implementation"));
     } else if "page rank implementation".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Page Rank Implementation"));
+        return Some(String::from("projects Page Rank Implementation"));
     }
 
     // match various sorting algorithms
     if "various sorting algorithm implementations".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Various Sorting Algorithm Implementations"));
+        return Some(String::from(
+            "projects Various Sorting Algorithm Implementations",
+        ));
     } else if "sorting algorithms".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Sorting Algorithms"));
+        return Some(String::from("projects Sorting Algorithms"));
     }
 
     // match image processing algorithms
     if "image processing algorithms".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Image Processing Algorithms"));
+        return Some(String::from("projects Image Processing Algorithms"));
     }
 
     // match SHA256 implementation
     if "sha256 implementation".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("SHA256 Implementation"));
+        return Some(String::from("projects SHA256 Implementation"));
     }
 
     // match RSA encryption implementation
     if "rsa encryption implementation".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("RSA Encryption Implementation"));
+        return Some(String::from("projects RSA Encryption Implementation"));
     }
 
     // match three body problem simulation
     if "three body problem simulation".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Three Body Problem Simulation"));
+        return Some(String::from("projects Three Body Problem Simulation"));
     }
 
     // match spotify recommendation engine
     if "spotify recommendation engine".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Spotify Recommendation Engine"));
+        return Some(String::from("projects Spotify Recommendation Engine"));
     }
 
     // match covid-19 data analysis
     if "covid-19 data analysis".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("COVID-19 Data Analysis"));
+        return Some(String::from("projects COVID-19 Data Analysis"));
     } else if "covid19 data analysis".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("COVID19 Data Analysis"));
+        return Some(String::from("projects COVID19 Data Analysis"));
     }
 
     // match text based role playing game
     if "text based role playing game".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Text Based Role Playing Game"));
+        return Some(String::from("projects Text Based Role Playing Game"));
     } else if "text based rpg".starts_with(&current_arg_name_lowercase[..]) {
-        return Some(String::from("Text Based RPG"));
+        return Some(String::from("projects Text Based RPG"));
     }
 
     None

@@ -1,6 +1,6 @@
 use gloo_console::log;
-use stylist::css;
 use stylist::yew::Global;
+use stylist::{css, Style};
 use web_sys::{window, Element, HtmlInputElement, KeyboardEvent};
 use yew::prelude::*;
 
@@ -27,6 +27,8 @@ pub struct CommandEnterLineProps {
     pub node_ref: NodeRef,
     pub on_key_enter: Callback<KeyboardEvent>,
     pub input_style: String,
+    pub current_value: String,
+    pub autocomplete_text: Option<String>,
 }
 
 /// Function component for text extry line where user puts in commands
@@ -53,21 +55,61 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
         })
     };
 
+    let autocomplete_text = match &props.autocomplete_text {
+        Some(text) => String::from(text),
+        None => String::from(""),
+    };
+
+    let difference_from_actual =
+        (props.current_value.len() as i32) - (autocomplete_text.len() as i32);
+
+    let autocomplete_hangover_text = if difference_from_actual < 0 {
+        String::from(&autocomplete_text[(props.current_value.len())..])
+    } else {
+        String::from("")
+    };
+
+    let overlapping_div_class = css!("margin: 0px; position: relative; width: 100%; height: 100%;");
+    let autocomplete_div_class = css!("position: absolute; left: 2px; top: 0px; margin: 0px;");
+
+    let mut margin_change = (difference_from_actual) + (autocomplete_text.len() as i32);
+
+    // add space if string starts with space because p tag removes leading spaces
+    if autocomplete_hangover_text.len() > 0 {
+        if &autocomplete_hangover_text[..1] == " " {
+            margin_change += 1;
+        }
+    }
+
+    let p_autocomplete_class_string = format!(
+        "left: {}ch; position: absolute; margin: 0px; width: 100vw; color: var(--text-color-main-transparent-rec);",
+        margin_change.to_string()
+    );
+
+    let overlapping_p_autocomplete_text_class = Style::new(p_autocomplete_class_string).unwrap();
+
     html!(
         <div class="command-single-line">
             <UsernameText/>
             <div class="command-input">
-                <label for="command-input">
-                    <input ref={input_node_ref}
-                        oninput={oninput}
-                        onkeyup={onkeyenter}
-                        onkeydown={onkeydown}
-                        id="command-input"
-                        type="text"
-                        class={&props.input_style.clone()}
-                        maxlength="100"
-                    />
-                </label>
+                <div class={overlapping_div_class}>
+                    <div class={autocomplete_div_class}>
+                        <p class={overlapping_p_autocomplete_text_class}>
+                            {autocomplete_hangover_text}
+                        </p>
+                    </div>
+                    <label for="command-input">
+                        <input ref={input_node_ref}
+                            oninput={oninput}
+                            onkeyup={onkeyenter}
+                            onkeydown={onkeydown}
+                            id="command-input"
+                            type="text"
+                            class={&props.input_style.clone()}
+                            maxlength="100"
+                        />
+                    </label>
+                </div>
             </div>
         </div>
     )
@@ -76,6 +118,7 @@ fn command_enter_line(props: &CommandEnterLineProps) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     let last_command_handle = use_state(String::default);
+    let autocomplete_result_handle = use_state(Option::<String>::default);
     let arrow_keys_command_history_index_handle = use_state(|| 0); // which index in the history the up/down arrow actions are
     let entire_command_history_handle = use_mut_ref(Vec::<String>::new); // entire command history that can't be wiped
     let command_history_handle = use_mut_ref(|| vec![String::from("head")]); // store history of commands and start with head command "already run"
@@ -109,13 +152,14 @@ fn app() -> Html {
     let oncommandinput = {
         let command_node_ref = command_node_ref.clone();
         let last_command_handle = last_command_handle.clone();
+        let autocomplete_result_handle = autocomplete_result_handle.clone();
 
         Callback::from(move |_| {
             let input = command_node_ref.cast::<HtmlInputElement>();
 
             if let Some(input) = input {
-                let auto_complete_result = auto_complete(input.value().clone());
-                log!(auto_complete_result);
+                autocomplete_result_handle.set(auto_complete(input.value().clone()));
+
                 last_command_handle.set(input.value());
             }
         })
@@ -123,6 +167,7 @@ fn app() -> Html {
 
     let onkeyenter = {
         let command_node_ref = command_node_ref.clone();
+        let last_command_handle = last_command_handle.clone();
 
         Callback::from(move |e: KeyboardEvent| {
             if e.key() == "Enter" {
@@ -218,12 +263,26 @@ fn app() -> Html {
                             .set(arrow_keys_command_history_index + 1);
                     }
                 }
+            } else if e.key() == "Tab" {
+                let target = e.target_dyn_into::<HtmlInputElement>(); // cast to input element to set and get current text
+                if let Some(target) = target {
+                    let input = target.value();
+
+                    // if the auto complete returns a suggestion, update the input box
+                    if let Some(autocomplete_suggestion) = auto_complete(input) {
+                        target.set_value(&autocomplete_suggestion[..]);
+                        last_command_handle.set(autocomplete_suggestion);
+                    }
+                }
             }
         })
     };
 
     // text coloring if the command is invalid
-    let input_text_style = if valid_command(&last_command) || last_command == String::new() {
+    let input_text_style = if valid_command(&last_command)
+        || last_command == String::new()
+        || auto_complete(last_command.clone()).is_some()
+    {
         String::from("command-input")
     } else {
         String::from("command-input-incorrect")
@@ -241,6 +300,7 @@ fn app() -> Html {
                 --text-color-incorrect: rgb(156, 31, 31);
                 --background-color: rgb(36,37,38);
                 --text-color-main-transparent: rgba(200, 216, 230, 0.5);
+                --text-color-main-transparent-rec: rgba(200, 216, 230, 0.4);
             }
 
             body {
@@ -343,6 +403,8 @@ fn app() -> Html {
                     node_ref = {command_node_ref}
                     on_key_enter = {onkeyenter}
                     input_style = {input_text_style}
+                    current_value = {(*last_command_handle).clone()}
+                    autocomplete_text = {(*autocomplete_result_handle).clone()}
                 />
             </div>
         </>
